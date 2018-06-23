@@ -1,10 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hbase scan</title>
+    <link href="../vender/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" charset="utf-8" />
+
+    <style>
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
+
+        .nav-height{
+            height: 50px;
+        }
+        .container-title{
+            height: 95px;
+            margin-bottom: 20px;
+            background-color: #fafbfc;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        .container-title-content{
+            margin-top: -5px;
+        }
+
+        .checkobj{
+            height: 110px;
+            width: 250px;
+            background-color: #4cae4c;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-right: 9px;
+            margin-bottom: 15px;
+            float: left !important;
+            color: #fff;
+        }
+
+        .checkobj-content{
+        float: left !important;
+        margin-top: -10px;
+        margin-left: 10px;
+        width: 100%;
+        cursor: pointer;
+        }
+
+
+    </style>
 </head>
 <body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/manager"><span class="glyphicon glyphicon-home"></span> Home</a>
+        </div>
+    </div>
+</nav>
+<div class="clearfix nav-height"></div>
+<div class="container-fluid container-title">
+    <div class="container-fluid container-title-content">
+        <h1>HbaseChecker</h1>
+        <p><span> CheckNoder : </span> <span id="service-node">127.0.0.1</span> </p>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body" id="checker-content">
+                    <div class="checkobj" id="add-checkobj" style="background-color: #ffffff">
+                        <div class="pull-left" style="width:100%">
+                            <span class="glyphicon glyphicon-plus" style="font-size:35px;color:#040404;display:block;width:60px;margin: 0 auto;margin-top: 35px"></span>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- .panel -->
+        </div><!-- .col-md-12 -->
+    </div><!-- .row -->
+</div><!-- .container-fluid -->
 
 </body>
+<script src="../vender/jquery/jquery-2.2.3.min.js"></script>
+<script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script src="../js/manager.js"></script>
 </html>

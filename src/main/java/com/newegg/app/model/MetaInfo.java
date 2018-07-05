@@ -1,9 +1,11 @@
-package com.lzz.app.model;
+package com.newegg.app.model;
+
+import io.grpc.distribute.DmetaParam;
 
 /**
  * Created by gl49 on 2018/6/23.
  */
-public class MetaInfo {
+public class MetaInfo extends DmetaParam {
     private int id;
     private String tableName;
     private String zkAddress;
@@ -11,6 +13,16 @@ public class MetaInfo {
     private String kfakaTopic;
     private long maxUpdateRangeTime;
     private long updateRangeTime;
+
+    public MetaInfo(int id, String tableName, String zkAddress, String kafkaAddress, String kfakaTopic, long maxUpdateRangeTime, long updateRangeTime) {
+        this.id = id;
+        this.tableName = tableName;
+        this.zkAddress = zkAddress;
+        this.kafkaAddress = kafkaAddress;
+        this.kfakaTopic = kfakaTopic;
+        this.maxUpdateRangeTime = maxUpdateRangeTime;
+        this.updateRangeTime = updateRangeTime;
+    }
 
     public int getId() {
         return id;

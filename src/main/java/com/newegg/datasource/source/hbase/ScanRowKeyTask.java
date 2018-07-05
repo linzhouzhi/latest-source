@@ -1,6 +1,6 @@
-package com.lzz.datasource.source.hbase;
+package com.newegg.datasource.source.hbase;
 
-import com.lzz.app.model.MetaInfo;
+import com.newegg.app.model.MetaInfo;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +53,7 @@ public class ScanRowKeyTask implements Callable<ScanResult> {
         return new ScanResult(success,rowKeySet);
     }
 
-    public  Set<String> getRowKeySet(Table table, Pair<byte[], byte[]> pair, long startTime,long endTime) throws IOException {
+    public  Set<String> getRowKeySet(Table table, Pair<byte[], byte[]> pair, long startTime, long endTime) throws IOException {
         Set<String> rowKeySet = new HashSet<>(100000);
         Scan scan = new Scan();
         scan.setStartRow(pair.getFirst());

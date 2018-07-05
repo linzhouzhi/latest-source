@@ -1,7 +1,7 @@
-package com.lzz.datasource.source.hbase;
+package com.newegg.datasource.source.hbase;
 
-import com.lzz.app.model.MetaInfo;
-import com.lzz.datasource.channel.QueueCache;
+import com.newegg.app.model.MetaInfo;
+import com.newegg.datasource.channel.QueueCache;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,7 +25,6 @@ public class HbaseScanTask implements  UpdateDataTask{
     public static final Log logger = LogFactory.getLog(HbaseScanTask.class);
     public static ExecutorService threadPool = Executors.newFixedThreadPool(500);
     private static Map<String, AtomicLong> endTimeMap = new ConcurrentHashMap<>();
-    public static int HBASE_BATCH_SIZE = 100;
 
     private MetaInfo metaInfo;
     public HbaseScanTask(MetaInfo metaInfo) {
@@ -34,6 +33,7 @@ public class HbaseScanTask implements  UpdateDataTask{
 
     @Override
     public void scanUpdate() {
+        System.out.println("ssssssssssssssssssssssssss scsan update");
         logger.info( "itemPrice EndTime: " + getEndTime(String.valueOf(this.metaInfo.getId()))  );
         Set<String> rowKeySet = new HashSet<>(100000); //要重新初始化
         org.apache.hadoop.hbase.client.Connection connection = null;

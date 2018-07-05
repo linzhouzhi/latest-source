@@ -1,4 +1,4 @@
-package com.lzz;
+package com.newegg;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.lzz.datasource.channel;
+package com.newegg.datasource.channel;
 
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;

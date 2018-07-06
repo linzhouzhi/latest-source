@@ -4,10 +4,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Hbase scan</title>
     <link href="../vender/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" charset="utf-8" />
-    <link href="../vender/bootstrap-switch/bootstrapSwitch.css" rel="stylesheet" charset="utf-8" />
     <script src="../vender/jquery/jquery-2.2.3.min.js"></script>
     <script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
-    <script src="../vender/bootstrap-switch/bootstrapSwitch.js"></script>
     <style>
         .string { color: green; }
         .number { color: darkorange; }
@@ -41,9 +39,8 @@
         }
 
         .inc-item{
-            height: 130px;
+            height: 150px;
             width: 290px;
-            background-color: #65b165c9;
             border: 2px solid #ddd;
             border-radius: 5px;
             margin-right: 9px;
@@ -51,6 +48,13 @@
             float: left !important;
             color: #e7f5ea;
         }
+        .switch-1{
+            background-color: #65b165c9;
+        }
+        .switch-0{
+            background-color: #9c8888;
+        }
+
         .inc-item-content{
             margin-top: -20px;
             margin-left: 10px;
@@ -90,10 +94,6 @@
 <div class="container-fluid container-title">
     <div class="container-fluid container-title-content">
         <h1>HbaseScanInc</h1>
-        <div class="switch switch-mini" data-on="success" data-off="danger">
-            <input name="task-switch" type="checkbox" />
-        </div>
-
         <p><span> TaskNoder : </span> <span id="service-node">127.0.0.1</span> </p>
     </div>
 </div>

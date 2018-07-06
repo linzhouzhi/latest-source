@@ -1,11 +1,15 @@
 var checkTemplete = '<div class="inc-item switch-{startSwitch}" id="{id}">' +
                    '<span class="glyphicon glyphicon-remove-circle remove-inc-item" data-id="{id}"></span>' +
                    "<div class='pull-left inc-item-content' data-detail='{detail}'>" +
-                   '<div class="show-object-name" id="inc-item-{id}">{incObjectName}</div>' +
+                   '<div class="show-object-name" id="inc-item-{id}">[ {incObjectName} ]</div>' +
                    '<div class="show-field"><span class="show-field-name">TableName:</span> {tableName}</div>' +
                    '<div class="show-field"><span class="show-field-name">HbaseZK:</span> {zkAddress}</div>' +
                    '<div class="show-field"><span class="show-field-name">Topic:</span> {kfakaTopic}</div>' +
                    '<div class="show-field"><span class="show-field-name">Kafka:</span> {kafkaAddress}</div>' +
+                   '</div>'+
+                   '<div class="btn-group btn-group-xs pull-left" role="group" style="margin-left: 10px;margin-top: 5px;">' +
+                   '<button type="button" class="btn btn-success start-task" data-id="{id}">Start</button>'+
+                   '<button type="button" class="btn btn-default stop-task" data-id="{id}">Stop</button>'+
                    '</div>' +
                    '</div>';
 
@@ -16,17 +20,13 @@ var alertTemplate = '<div class="alert alert-danger" role="alert">' +
 $(document).ready(function(){
     $.get("/meta/getMetaInfoList", function(obj){
         var metaList = obj.res;
+        var div_con = "";
         $.each( metaList, function(i, checkobj){
             checkobj.detail = JSON.stringify(checkobj);
-            $("#add-inc-item").before( checkTemplete.format( checkobj ) );
+            div_con += checkTemplete.format( checkobj );
         });
+        $("#add-inc-item").before( div_con );
     });
-
-    $('[name="task-switch"]').bootstrapSwitch({
-        size:"mini",
-        animate:"true"
-    });
-
 });
 
 $(document).on("click",".inc-item-content", function(){
@@ -46,6 +46,20 @@ $(document).on("click",".remove-inc-item", function(){
     $("#remove-inc-item-show-id").text( $("#inc-item-" + id).text() );
     $('#remove-inc-item-model').modal('show');
 });
+
+$(document).on("click",".start-task", function(){
+    var id = $(this).data("id");
+    $.get("/meta/updateStartSwitch?id=" + id + "&startSwitch=1", function(data){
+        location.reload();
+    });
+});
+$(document).on("click",".stop-task", function(){
+    var id = $(this).data("id");
+    $.get("/meta/updateStartSwitch?id=" + id + "&startSwitch=0", function(data){
+        location.reload();
+    });
+});
+
 
 $("#remove-inc-item-confirm").click(function(){
     $('#remove-inc-item-model').modal('hide');

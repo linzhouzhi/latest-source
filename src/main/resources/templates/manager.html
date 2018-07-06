@@ -4,7 +4,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Hbase scan</title>
     <link href="../vender/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet" charset="utf-8" />
+    <link href="../vender/bootstrap-switch/css/bootstrap3/bootstrap-switch.css" rel="stylesheet" charset="utf-8" />
 
+    <script src="../vender/jquery/jquery-2.2.3.min.js"></script>
+    <script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="../vender/bootstrap-switch/js/bootstrap-switch.js"></script>
     <style>
         .string { color: green; }
         .number { color: darkorange; }
@@ -25,16 +29,34 @@
             margin-top: -5px;
         }
 
+        .remove-inc-item{
+            margin-top: 3px;
+            margin-right: 3px;
+            color: #ffffff;
+            font-size: 22px;
+            float: right !important;
+            cursor: pointer;
+        }
+        #add-inc-item{
+            cursor: pointer;
+        }
+
         .inc-item{
-            height: 110px;
-            width: 250px;
-            background-color: #4cae4c;
+            height: 130px;
+            width: 290px;
+            background-color: #65b165c9;
             border: 2px solid #ddd;
             border-radius: 5px;
             margin-right: 9px;
             margin-bottom: 15px;
             float: left !important;
-            color: #fff;
+            color: #e7f5ea;
+        }
+        .inc-item-content{
+            margin-top: -20px;
+            margin-left: 10px;
+            height: auto;
+            width: 290px;
         }
 
         .add-inc-content{
@@ -44,8 +66,16 @@
             width: 100%;
             cursor: pointer;
         }
+        .show-field{
+            height:21px;
+        }
+        .show-field-name{
 
-
+        }
+        .show-object-name{
+            color:#fff;
+            font-size:16px;
+        }
     </style>
 </head>
 <body>
@@ -61,6 +91,10 @@
 <div class="container-fluid container-title">
     <div class="container-fluid container-title-content">
         <h1>HbaseScanInc</h1>
+        <div class="switch switch-mini" data-on="success" data-off="warning">
+            <input name="task-switch" type="checkbox" />
+        </div>
+
         <p><span> TaskNoder : </span> <span id="service-node">127.0.0.1</span> </p>
     </div>
 </div>
@@ -71,7 +105,7 @@
                 <div class="panel-body" id="inc-item-content">
                     <div class="inc-item" id="add-inc-item" style="background-color: #ffffff">
                         <div class="pull-left" style="width:100%">
-                            <span class="glyphicon glyphicon-plus" style="font-size:35px;color:#040404;display:block;width:60px;margin: 0 auto;margin-top: 35px"></span>
+                            <span class="glyphicon glyphicon-plus" style="font-size:35px;color:#040404;display:block;width:40px;margin: 0 auto;margin-top: 45px"></span>
                         </div>
                     </div>
                 </div>
@@ -136,8 +170,46 @@
 </div><!-- /.modal -->
 
 
+
+<div class="modal fade" id="detail-inc-item-model" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Inc Item Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <pre id="inc-item-detail">
+
+                    </pre>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Small modal -->
+<div class="modal fade" id="remove-inc-item-model" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Remove Inc Item</h4>
+            </div>
+            <div class="modal-body">
+                <p>confirm remove the <b id="remove-inc-item-show-id"> checkobj</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger btn-sm" id="remove-inc-item-confirm">confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
-<script src="../vender/jquery/jquery-2.2.3.min.js"></script>
-<script src="../vender/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 <script src="../js/manager.js"></script>
 </html>

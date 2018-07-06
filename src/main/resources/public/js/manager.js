@@ -1,10 +1,112 @@
-$(document).ready(function(){
+var checkTemplete = '<div class="inc-item switch-{startSwitch}" id="{id}">' +
+                   '<span class="glyphicon glyphicon-remove-circle remove-inc-item" data-id="{id}"></span>' +
+                   "<div class='pull-left inc-item-content' data-detail='{detail}'>" +
+                   '<div class="show-object-name" id="inc-item-{id}">{incObjectName}</div>' +
+                   '<div class="show-field"><span class="show-field-name">TableName:</span> {tableName}</div>' +
+                   '<div class="show-field"><span class="show-field-name">HbaseZK:</span> {zkAddress}</div>' +
+                   '<div class="show-field"><span class="show-field-name">Topic:</span> {kfakaTopic}</div>' +
+                   '<div class="show-field"><span class="show-field-name">Kafka:</span> {kafkaAddress}</div>' +
+                   '</div>' +
+                   '</div>';
 
+var alertTemplate = '<div class="alert alert-danger" role="alert">' +
+                    '<strong>Error!</strong> {msg}' +
+                    '</div>';
+
+$(document).ready(function(){
+    $.get("/meta/getMetaInfoList", function(obj){
+        var metaList = obj.res;
+        $.each( metaList, function(i, checkobj){
+            checkobj.detail = JSON.stringify(checkobj);
+            $("#add-inc-item").before( checkTemplete.format( checkobj ) );
+        });
+    });
+
+    $('[name="task-switch"]').bootstrapSwitch({
+        size:"mini",
+        animate:"true"
+    });
+});
+
+$(document).on("click",".inc-item-content", function(){
+    var detail = $(this).data("detail");
+    $("#inc-item-detail").html( syntaxHighlight(detail) );
+    $('#detail-inc-item-model').modal('show');
 });
 
 $(document).on("click", "#add-inc-item", function(){
     $("#add-inc-item-model").modal("show");
 });
+
+
+$(document).on("click",".remove-inc-item", function(){
+    var id = $(this).data("id");
+    $("#remove-inc-item-confirm").data("id", id );
+    $("#remove-inc-item-show-id").text( $("#inc-item-" + id).text() );
+    $('#remove-inc-item-model').modal('show');
+});
+
+$("#remove-inc-item-confirm").click(function(){
+    $('#remove-inc-item-model').modal('hide');
+    var id = $("#remove-inc-item-confirm").data( "id" );
+    $.get("/meta/removeMetaInfo?id=" + id, function(data){
+        $( "#" + id ).remove();
+    });
+});
+
+$("#add-inc-item-confirm").click(function(){
+    var data = {};
+    data.incObjectName= $("input[name='incObjectName']").val().trim();
+    if( !data.incObjectName ){
+        addError("incObjectName is not empty");
+        return;
+    }
+    data.tableName= $("input[name='tableName']").val().trim();
+    if( !data.tableName ){
+        addError("tableName is not empty");
+        return;
+    }
+    data.familyColumn= $("input[name='familyColumn']").val().trim();
+    if( !data.familyColumn ){
+        addError("familyColumn is not empty");
+        return;
+    }
+    data.zkAddress= $("input[name='zkAddress']").val().trim();
+    if( !data.zkAddress ){
+        addError("zkAddress is not empty");
+        return;
+    }
+    data.kafkaAddress= $("input[name='kafkaAddress']").val().trim();
+    if( !data.kafkaAddress ){
+        addError("kafkaAddress is not empty");
+        return;
+    }
+    data.kfakaTopic= $("input[name='kfakaTopic']").val().trim();
+    if( !data.kfakaTopic ){
+        addError("kfakaTopic is not empty");
+        return;
+    }
+    data.maxUpdateRangeTime= $("input[name='maxUpdateRangeTime']").val().trim();
+    if( !data.maxUpdateRangeTime ){
+        addError("maxUpdateRangeTime is not empty");
+        return;
+    }
+    data.updateRangeTime= $("input[name='updateRangeTime']").val().trim();
+    if( !data.updateRangeTime ){
+        addError("updateRangeTime is not empty");
+        return;
+    }
+
+    post("/meta/addMetaInfo", data, function( re, arg ){
+       location.reload();
+    });
+
+});
+
+function addError(msg){
+    $("#add-inc-item-alert").html( alertTemplate.format( {"msg": msg } ) );
+}
+
 
 function post(url, data, callback){
     $.ajax({
@@ -17,7 +119,6 @@ function post(url, data, callback){
       success: callback
     });
 }
-
 
 
 function syntaxHighlight(json) {
@@ -49,4 +150,29 @@ function getUrlParam(name) {
     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
     if (r != null) return unescape(r[2]);
     return null; //返回参数值
+}
+
+
+
+String.prototype.format = function(args) {
+    var result = this;
+    if (arguments.length > 0) {
+        if (arguments.length == 1 && typeof (args) == "object") {
+            for (var key in args) {
+                if(args[key]!=undefined){
+                    var reg = new RegExp("({" + key + "})", "g");
+                    result = result.replace(reg, args[key]);
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < arguments.length; i++) {
+                if (arguments[i] != undefined) {
+                    var reg = new RegExp("({[" + i + "]})", "g");
+                    result = result.replace(reg, arguments[i]);
+                }
+            }
+        }
+    }
+    return result;
 }

@@ -13,14 +13,16 @@ public class MetaInfo extends DmetaParam {
     private String zkAddress;
     private String kafkaAddress;
     private String kfakaTopic;
-    private long maxUpdateRangeTime;
-    private long updateRangeTime;
+    private int maxUpdateRangeTime;
+    private int updateRangeTime;
+    private int startSwitch;
+    private int updateTime;
 
     public MetaInfo(){
 
     }
-    public MetaInfo(int id, String incObjectName, String tableName, String familyColumn, String zkAddress, String kafkaAddress, String kfakaTopic, long maxUpdateRangeTime, long updateRangeTime) {
-        this.id = id;
+
+    public MetaInfo(String incObjectName, String tableName, String familyColumn, String zkAddress, String kafkaAddress, String kfakaTopic, int maxUpdateRangeTime, int updateRangeTime, int startSwitch, int updateTime) {
         this.incObjectName = incObjectName;
         this.tableName = tableName;
         this.familyColumn = familyColumn;
@@ -29,6 +31,8 @@ public class MetaInfo extends DmetaParam {
         this.kfakaTopic = kfakaTopic;
         this.maxUpdateRangeTime = maxUpdateRangeTime;
         this.updateRangeTime = updateRangeTime;
+        this.startSwitch = startSwitch;
+        this.updateTime = updateTime;
     }
 
     public int getId() {
@@ -87,19 +91,35 @@ public class MetaInfo extends DmetaParam {
         this.kfakaTopic = kfakaTopic;
     }
 
-    public long getMaxUpdateRangeTime() {
+    public int getMaxUpdateRangeTime() {
         return maxUpdateRangeTime;
     }
 
-    public void setMaxUpdateRangeTime(long maxUpdateRangeTime) {
+    public void setMaxUpdateRangeTime(int maxUpdateRangeTime) {
         this.maxUpdateRangeTime = maxUpdateRangeTime;
     }
 
-    public long getUpdateRangeTime() {
+    public int getUpdateRangeTime() {
         return updateRangeTime;
     }
 
-    public void setUpdateRangeTime(long updateRangeTime) {
+    public void setUpdateRangeTime(int updateRangeTime) {
         this.updateRangeTime = updateRangeTime;
+    }
+
+    public int getStartSwitch() {
+        return startSwitch;
+    }
+
+    public void setStartSwitch(int startSwitch) {
+        this.startSwitch = startSwitch;
+    }
+
+    public int getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(int updateTime) {
+        this.updateTime = updateTime;
     }
 }

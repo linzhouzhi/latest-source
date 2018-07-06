@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lzz.app.dao.IMetaInfoDao">
+    <select id="getMetaInfoList" resultType="com.lzz.app.model.MetaInfo">
+        select * from meta_info
+    </select>
+
+    <select id="getMetaInfo" resultType="com.lzz.app.model.MetaInfo">
+        select * from meta_info where id=#{id}
+    </select>
+
+    <insert id="addMetaInfo"  parameterType="com.lzz.app.model.MetaInfo"  useGeneratedKeys="true" keyProperty="id">
+        insert into meta_info(inc_object_name,table_name,family_column, zk_address, kafka_address,kfaka_topic,max_update_range_time,update_range_time,start_switch,update_time )
+        values(#{incObjectName},#{tableName},#{familyColumn},#{zkAddress},#{kafkaAddress},#{kfakaTopic},#{maxUpdateRangeTime},#{updateRangeTime},#{startSwitch},#{updateTime})
+    </insert>
+
+    <delete id="removeMetaInfo">
+        delete from meta_info where id = #{id}
+    </delete>
+
+    <update id="updateStartSwitch">
+        UPDATE
+        meta_info
+        SET
+        start_switch = #{startSwitch}
+        WHERE
+        id = #{id}
+    </update>
+</mapper>

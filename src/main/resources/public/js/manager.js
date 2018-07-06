@@ -26,6 +26,7 @@ $(document).ready(function(){
         size:"mini",
         animate:"true"
     });
+
 });
 
 $(document).on("click",".inc-item-content", function(){

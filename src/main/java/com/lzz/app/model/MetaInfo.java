@@ -1,4 +1,4 @@
-package com.newegg.app.model;
+package com.lzz.app.model;
 
 import io.grpc.distribute.DmetaParam;
 
@@ -7,16 +7,23 @@ import io.grpc.distribute.DmetaParam;
  */
 public class MetaInfo extends DmetaParam {
     private int id;
+    private String incObjectName;
     private String tableName;
+    private String familyColumn;
     private String zkAddress;
     private String kafkaAddress;
     private String kfakaTopic;
     private long maxUpdateRangeTime;
     private long updateRangeTime;
 
-    public MetaInfo(int id, String tableName, String zkAddress, String kafkaAddress, String kfakaTopic, long maxUpdateRangeTime, long updateRangeTime) {
+    public MetaInfo(){
+
+    }
+    public MetaInfo(int id, String incObjectName, String tableName, String familyColumn, String zkAddress, String kafkaAddress, String kfakaTopic, long maxUpdateRangeTime, long updateRangeTime) {
         this.id = id;
+        this.incObjectName = incObjectName;
         this.tableName = tableName;
+        this.familyColumn = familyColumn;
         this.zkAddress = zkAddress;
         this.kafkaAddress = kafkaAddress;
         this.kfakaTopic = kfakaTopic;
@@ -32,12 +39,28 @@ public class MetaInfo extends DmetaParam {
         this.id = id;
     }
 
+    public String getIncObjectName() {
+        return incObjectName;
+    }
+
+    public void setIncObjectName(String incObjectName) {
+        this.incObjectName = incObjectName;
+    }
+
     public String getTableName() {
         return tableName;
     }
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public String getFamilyColumn() {
+        return familyColumn;
+    }
+
+    public void setFamilyColumn(String familyColumn) {
+        this.familyColumn = familyColumn;
     }
 
     public String getZkAddress() {

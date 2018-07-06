@@ -2,7 +2,9 @@ $(document).ready(function(){
 
 });
 
-
+$(document).on("click", "#add-inc-item", function(){
+    $("#add-inc-item-model").modal("show");
+});
 
 function post(url, data, callback){
     $.ajax({

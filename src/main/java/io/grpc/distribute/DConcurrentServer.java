@@ -14,14 +14,11 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by lzz on 2018/3/26.
  */
 public class DConcurrentServer {
-    private ExecutorService threadPool = Executors.newCachedThreadPool();
     private static Gson gson = new Gson();
     public static int port;
     private Server server;
@@ -84,20 +81,15 @@ public class DConcurrentServer {
             final Any classNameObj = request.getClassName();
             final Any metaParam = request.getMetaParam();
             final Any metaParamClass = request.getMetaParamClass();
-            threadPool.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Class<?> runClass = Class.forName( classNameObj.getValue().toStringUtf8() );
-                        Object runObject = getRunObject(classNameObj, metaParam, metaParamClass);
-                        Method runMethod = runClass.getDeclaredMethod( "run" );
-                        runMethod.setAccessible( true );
-                        runMethod.invoke( runObject ) ;
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
+            try {
+                Class<?> runClass = Class.forName( classNameObj.getValue().toStringUtf8() );
+                Object runObject = getRunObject(classNameObj, metaParam, metaParamClass);
+                Method runMethod = runClass.getDeclaredMethod( "run" );
+                runMethod.setAccessible( true );
+                runMethod.invoke( runObject ) ;
+            }catch (Exception e){
+
+            }
         }
 
         @Override
@@ -136,8 +128,8 @@ public class DConcurrentServer {
         Object runObject;
         ByteString paramClassByte = metaParamClass.getValue();
         if( paramClassByte.size() != 0 ){
-            Constructor constructorObj = runClass.getConstructor( DmetaParam.class );
             Class<?> paramClass = Class.forName(paramClassByte.toStringUtf8());
+            Constructor constructorObj = runClass.getConstructor( paramClass ); //DmetaParam.class
             Object metaObject = gson.fromJson(metaParam.getValue().toStringUtf8(), paramClass);
             runObject = constructorObj.newInstance( metaObject );
         }else{

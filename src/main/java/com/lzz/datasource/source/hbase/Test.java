@@ -1,4 +1,4 @@
-package com.newegg.datasource.source.hbase;
+package com.lzz.datasource.source.hbase;
 
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantLock;

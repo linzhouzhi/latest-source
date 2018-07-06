@@ -25,7 +25,7 @@
             margin-top: -5px;
         }
 
-        .checkobj{
+        .inc-item{
             height: 110px;
             width: 250px;
             background-color: #4cae4c;
@@ -37,12 +37,12 @@
             color: #fff;
         }
 
-        .checkobj-content{
-        float: left !important;
-        margin-top: -10px;
-        margin-left: 10px;
-        width: 100%;
-        cursor: pointer;
+        .add-inc-content{
+            float: left !important;
+            margin-top: -10px;
+            margin-left: 10px;
+            width: 100%;
+            cursor: pointer;
         }
 
 
@@ -60,16 +60,16 @@
 <div class="clearfix nav-height"></div>
 <div class="container-fluid container-title">
     <div class="container-fluid container-title-content">
-        <h1>HbaseChecker</h1>
-        <p><span> CheckNoder : </span> <span id="service-node">127.0.0.1</span> </p>
+        <h1>HbaseScanInc</h1>
+        <p><span> TaskNoder : </span> <span id="service-node">127.0.0.1</span> </p>
     </div>
 </div>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-body" id="checker-content">
-                    <div class="checkobj" id="add-checkobj" style="background-color: #ffffff">
+                <div class="panel-body" id="inc-item-content">
+                    <div class="inc-item" id="add-inc-item" style="background-color: #ffffff">
                         <div class="pull-left" style="width:100%">
                             <span class="glyphicon glyphicon-plus" style="font-size:35px;color:#040404;display:block;width:60px;margin: 0 auto;margin-top: 35px"></span>
                         </div>
@@ -79,6 +79,62 @@
         </div><!-- .col-md-12 -->
     </div><!-- .row -->
 </div><!-- .container-fluid -->
+
+
+<div class="modal fade" id="add-inc-item-model" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add Hbase Table</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="form-group">
+                        <label>IncObjectName</label>
+                        <input type="text" name="incObjectName" class="form-control" placeholder="e4:IM_ItemBase" />
+                    </div>
+                    <div class="form-group">
+                        <label>TableName</label>
+                        <input type="text" name="tableName" class="form-control" placeholder="ecitem:IM_ItemBase" />
+                    </div>
+                    <div class="form-group">
+                        <label>Family:Column</label>
+                        <input type="text" name="familyColumn" class="form-control" placeholder="BaseInfo:ItemNumber,BaseInfo:CountryCode" />
+                    </div>
+                    <div class="form-group">
+                        <label >HbaseZKAddress</label>
+                        <input type="text" name="zkAddress" class="form-control" placeholder="127.0.0.1:2181" />
+                    </div>
+                    <div class="form-group">
+                        <label >KafkaAddress</label>
+                        <input type="text" name="kafkaAddress" class="form-control" placeholder="127.0.0.1:2181" />
+                    </div>
+                    <div class="form-group">
+                        <label >KafakaTopic</label>
+                        <input name="kfakaTopic" class="form-control" placeholder="leostormtest" />
+                    </div>
+                    <div class="form-group">
+                        <label >MaxUpdateRange</label>
+                        <input name="maxUpdateRangeTime" class="form-control" placeholder="10" value="10" />
+                    </div>
+                    <div class="form-group">
+                        <label >UpdateRange</label>
+                        <input name="updateRangeTime" class="form-control" placeholder="2" value="2" />
+                    </div>
+                    <div class="form-group" id="add-inc-item-alert">
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-sm" id="add-inc-item-confirm">Add</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 </body>
 <script src="../vender/jquery/jquery-2.2.3.min.js"></script>

@@ -1,6 +1,6 @@
-package com.newegg.datasource.source.hbase;
+package com.lzz.datasource.source.hbase;
 
-import com.newegg.app.model.MetaInfo;
+import com.lzz.app.model.MetaInfo;
 import io.grpc.distribute.DCallable;
 import io.grpc.distribute.DmetaParam;
 

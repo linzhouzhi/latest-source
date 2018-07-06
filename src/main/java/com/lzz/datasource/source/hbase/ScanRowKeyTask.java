@@ -1,6 +1,6 @@
-package com.newegg.datasource.source.hbase;
+package com.lzz.datasource.source.hbase;
 
-import com.newegg.app.model.MetaInfo;
+import com.lzz.app.model.MetaInfo;
 import org.apache.commons.lang.time.StopWatch;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

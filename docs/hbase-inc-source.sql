@@ -12,5 +12,5 @@ create table if not exists meta_info(
     max_update_range_time tinyint not null,
     update_range_time tinyint not null,
     start_switch tinyint,
-    update_time int
+    update_time bigint
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

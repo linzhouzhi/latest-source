@@ -1,6 +1,5 @@
 package com.lzz.app.dao;
 
-import com.newegg.util.IOUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.TreeCache;
@@ -12,13 +11,9 @@ import org.apache.curator.utils.PathUtils;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.stereotype.Component;
-
 import java.io.Closeable;
 import java.util.List;
 
-/**
- *
- */
 @Component
 public class CuratorZookeeperClient implements ZookeeperClient {
 
@@ -71,7 +66,7 @@ public class CuratorZookeeperClient implements ZookeeperClient {
 	 *
 	 */
 	public void shutDown() {
-		IOUtils.closeQuietly(client);
+		client.close();
 	}
 
 

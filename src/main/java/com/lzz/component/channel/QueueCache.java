@@ -1,5 +1,6 @@
 package com.lzz.component.channel;
 
+import com.lzz.app.logic.MetaLogic;
 import com.lzz.app.model.MetaInfo;
 import com.lzz.component.sink.KafkaProducer;
 import org.springframework.stereotype.Component;
@@ -37,16 +38,22 @@ public class QueueCache {
         @Override
         public void run() {
             BlockingQueue<String> blockingQueue = queue();
-            System.out.println( metaInfo + "--------------------- queue");
-            KafkaProducer kafkaProducer = new KafkaProducer("ssecbigdata07:9093", "test001");
-            while (true){
-                try {
-                    String msg = blockingQueue.take();
-                    System.out.println( msg );
+            String brokerStr = MetaLogic.getKafkaBrokerList( metaInfo.getKafkaAddress() );
+            KafkaProducer kafkaProducer = new KafkaProducer(brokerStr, metaInfo.getKfakaTopic());
+            try {
+                while (true){
+                    String msg = blockingQueue.poll(10, TimeUnit.MINUTES);
+                    if( null == msg ){
+                        throw  new RuntimeException("msg blockding is long time empty");
+                    }
                     kafkaProducer.append( msg );
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            }catch (Exception e){
+                System.out.println( "remove queue....." );
+            }finally {
+                // 如果走出了这一行，说明队列在约定时间内为空
+                queueMap.remove( String.valueOf(this.metaInfo.getId()) );
+                kafkaProducer.close();
             }
         }
     }

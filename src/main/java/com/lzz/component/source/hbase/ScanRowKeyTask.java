@@ -19,6 +19,7 @@ import java.util.concurrent.Callable;
  */
 public class ScanRowKeyTask implements Callable<ScanResult> {
     public static final Log logger = LogFactory.getLog(ScanRowKeyTask.class);
+    private long MINUTE_VALUE = 60 * 1000;
     private Set<String> rowKeySet = new HashSet<>(10000);
     private MetaInfo metaInfo;
     private Table table;
@@ -49,7 +50,6 @@ public class ScanRowKeyTask implements Callable<ScanResult> {
         }finally {
             this.table.close();
         }
-
         return new ScanResult(success,rowKeySet);
     }
 
@@ -60,9 +60,9 @@ public class ScanRowKeyTask implements Callable<ScanResult> {
         scan.setStopRow(pair.getSecond());
 
         if( startTime == 0) { // 如果第一次运行，那么就是运行最大允许范围内时间
-            startTime = endTime - this.metaInfo.getMaxUpdateRangeTime();
-        }else if( (endTime - startTime) > this.metaInfo.getMaxUpdateRangeTime() ){ //如果当前时间距离上一次时间超过设置的值，那么开始时间
-            logger.error("endTime and startTime is too long range:" + (endTime - startTime) + " and starTime:" + startTime + " change " + (endTime - this.metaInfo.getMaxUpdateRangeTime()));
+            startTime = endTime - this.metaInfo.getMaxUpdateRangeTime() * MINUTE_VALUE;
+        }else if( (endTime - startTime) > this.metaInfo.getMaxUpdateRangeTime() * MINUTE_VALUE ){ //如果当前时间距离上一次时间超过设置的值，那么开始时间
+            logger.error("endTime and startTime is too long range:" + (endTime - startTime) + " and starTime:" + startTime + " change " + (endTime - this.metaInfo.getMaxUpdateRangeTime() * MINUTE_VALUE));
             startTime = endTime - this.metaInfo.getMaxUpdateRangeTime();
         }
         logger.info( "endTime:" + endTime + " starTime: " + startTime);
@@ -87,7 +87,6 @@ public class ScanRowKeyTask implements Callable<ScanResult> {
                             throw new RuntimeException("fail 10 times in iterator next",e);
                         }
                     }
-
                 }
                 success = true;
             }catch (Exception e){

@@ -8,6 +8,10 @@
         select * from meta_info
     </select>
 
+    <select id="getMetaInfoStartSwitchList" resultType="com.lzz.app.model.MetaInfo">
+        select * from meta_info where start_switch=1
+    </select>
+
     <select id="getMetaInfo" resultType="com.lzz.app.model.MetaInfo">
         select * from meta_info where id=#{id}
     </select>
@@ -26,6 +30,15 @@
         meta_info
         SET
         start_switch = #{startSwitch}
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="changeUpdateTime">
+        UPDATE
+        meta_info
+        SET
+        update_time = #{updateTime}
         WHERE
         id = #{id}
     </update>

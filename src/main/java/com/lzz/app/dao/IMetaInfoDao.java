@@ -13,6 +13,8 @@ import java.util.List;
 public interface IMetaInfoDao {
     List<MetaInfo> getMetaInfoList();
 
+    List<MetaInfo> getMetaInfoStartSwitchList();
+
     MetaInfo getMetaInfo(int id);
 
     int removeMetaInfo(int id );
@@ -20,4 +22,6 @@ public interface IMetaInfoDao {
     int addMetaInfo(MetaInfo metaInfo);
 
     boolean updateStartSwitch(@Param("id")int id, @Param("startSwitch")int startSwitch);
+
+    boolean changeUpdateTime(@Param("id")int id, @Param("updateTime")long updateTime);
 }

@@ -1,10 +1,12 @@
 package com.lzz.app.model;
 
-import io.grpc.distribute.DmetaParam;
+import org.springframework.stereotype.Component;
+import util.dconcurrent.DmetaParam;
 
 /**
  * Created by gl49 on 2018/6/23.
  */
+@Component
 public class MetaInfo extends DmetaParam {
     private int id;
     private String incObjectName;
@@ -16,13 +18,13 @@ public class MetaInfo extends DmetaParam {
     private int maxUpdateRangeTime;
     private int updateRangeTime;
     private int startSwitch;
-    private int updateTime;
+    private long updateTime;
 
     public MetaInfo(){
 
     }
 
-    public MetaInfo(String incObjectName, String tableName, String familyColumn, String zkAddress, String kafkaAddress, String kfakaTopic, int maxUpdateRangeTime, int updateRangeTime, int startSwitch, int updateTime) {
+    public MetaInfo(String incObjectName, String tableName, String familyColumn, String zkAddress, String kafkaAddress, String kfakaTopic, int maxUpdateRangeTime, int updateRangeTime, int startSwitch, long updateTime) {
         this.incObjectName = incObjectName;
         this.tableName = tableName;
         this.familyColumn = familyColumn;
@@ -115,11 +117,28 @@ public class MetaInfo extends DmetaParam {
         this.startSwitch = startSwitch;
     }
 
-    public int getUpdateTime() {
+    public long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(int updateTime) {
+    public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "MetaInfo{" +
+                "id=" + id +
+                ", incObjectName='" + incObjectName + '\'' +
+                ", tableName='" + tableName + '\'' +
+                ", familyColumn='" + familyColumn + '\'' +
+                ", zkAddress='" + zkAddress + '\'' +
+                ", kafkaAddress='" + kafkaAddress + '\'' +
+                ", kfakaTopic='" + kfakaTopic + '\'' +
+                ", maxUpdateRangeTime=" + maxUpdateRangeTime +
+                ", updateRangeTime=" + updateRangeTime +
+                ", startSwitch=" + startSwitch +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

@@ -5,21 +5,28 @@ import com.lzz.app.model.MetaInfo;
 import com.lzz.app.util.DateUtil;
 import com.lzz.component.source.hbase.UpdateHbaseTask;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import util.dconcurrent.DExecutors;
 import util.dconcurrent.DFuture;
 import util.dconcurrent.util.HostAndPort;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by gl49 on 2018/6/23.
  */
 @Component
-public class ScanSchedule {
+public class ScanSchedule implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private IMetaInfoDao metaInfoDao;
+    @Value("${dconcurrent.hostList}")
+    private String hostListStr;
+    @Value("${dconcurrent.serverport}")
+    private int serverPort;
+    private DExecutors client;
 
     public ScanSchedule(){
 
@@ -29,18 +36,15 @@ public class ScanSchedule {
         this.metaInfoDao = metaInfoDao;
     }
 
-    private static DExecutors client;
-    static {
-        DExecutors.serverStart(50051);
-        List<HostAndPort> hostAndPortList = new ArrayList<HostAndPort>();
-        HostAndPort hostAndPort1 = new HostAndPort("10.16.164.33", 50051);
-        HostAndPort hostAndPort2 = new HostAndPort("10.16.164.33", 50052);
-        hostAndPortList.add( hostAndPort1 );
-        hostAndPortList.add( hostAndPort2 );
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        DExecutors.serverStart( serverPort );
+        List<HostAndPort> hostAndPortList = DExecutors.getHostListByStrAddress( hostListStr );
         client = DExecutors.newFixDExecutor( hostAndPortList );
     }
 
-    @Scheduled(fixedRate = 1000 * 10)
+    // 必须加入 initialDelay， 不然会比 onApplication 还要先初始化
+    @Scheduled(initialDelay=1000, fixedRate = 1000 * 10)
     public void scheduleScanDataSource(){
         try {
             if( !client.isLeader() ){
@@ -48,17 +52,21 @@ public class ScanSchedule {
             }
             List<MetaInfo> metaInfos = metaInfoDao.getMetaInfoStartSwitchList();
             for(MetaInfo metaInfo : metaInfos){
-                int updateTime = metaInfo.getUpdateTime();
+                long updateTime = metaInfo.getUpdateTime();
                 int updateRange = metaInfo.getUpdateRangeTime();
-                int current = DateUtil.getTime();
-                if( current - updateTime > updateRange ){
+                long current = DateUtil.current();
+                if( current - updateTime > updateRange * 60 * 1000 ){
                     DFuture<Boolean> future = client.submit(new UpdateHbaseTask(metaInfo));
-                    System.out.println( future.get() + "------------------ boolean");
+                    Boolean finishUpdate = future.get();
+                    if( finishUpdate ){ // 成功要修改一下 update 时间保证，下次不会被继续调用
+                        metaInfoDao.changeUpdateTime(metaInfo.getId(), DateUtil.current());
+                    }
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
 
 }

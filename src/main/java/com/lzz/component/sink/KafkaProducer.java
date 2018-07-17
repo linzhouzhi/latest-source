@@ -5,7 +5,6 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 import org.springframework.stereotype.Component;
-
 import java.io.Closeable;
 import java.util.Properties;
 
@@ -34,7 +33,6 @@ public class KafkaProducer implements Closeable {
     }
 
     public KafkaProducer(String brokerList, String topic) {
-
         properties.put(SERIALIZER_CLASS_NAME, SERIALIZER_CLASS_VALUE);
         properties.put(REQUEST_REQUIRED_ACKS_NAME, REQUEST_REQUIRED_ACKS_VALUE);
         properties.put(METADATA_BROKER_LIST_NAME, brokerList);

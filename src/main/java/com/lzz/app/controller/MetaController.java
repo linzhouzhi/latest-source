@@ -52,4 +52,23 @@ public class MetaController {
         boolean res = metaLogic.updateStartSwitch( id, startSwitch );
         return Response.Result(Response.DEFAULT, res);
     }
+
+
+    @RequestMapping(value = "/checkMetaInfo", method = RequestMethod.POST)
+    @ResponseBody
+    public Response checkMetaInfo(@RequestBody MetaInfo metaInfo){
+        boolean checkTopicres = metaLogic.checkKafkaTopic( metaInfo.getKafkaAddress(), metaInfo.getKfakaTopic() );
+        boolean hbaseZkRes = metaLogic.checkZookeeperAddress( metaInfo.getZkAddress() );
+        if( checkTopicres && hbaseZkRes){
+            return Response.Success();
+        }else{
+            if( !hbaseZkRes ){
+                return Response.Error("check hbase zookeeper address");
+            }
+            if( !checkTopicres ){
+                return Response.Error("check kafkaTopic or kafkaAddress");
+            }
+            return Response.Error("check meta");
+        }
+    }
 }

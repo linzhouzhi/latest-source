@@ -112,9 +112,16 @@ $("#add-inc-item-confirm").click(function(){
         return;
     }
 
-    post("/meta/addMetaInfo", data, function( re, arg ){
-       location.reload();
+    post("/meta/checkMetaInfo", data, function( re, arg ){
+       if( re.code == 0 ){
+          post("/meta/addMetaInfo", data, function( re, arg ){
+             location.reload();
+          });
+       }else{
+         addError( re.msg );
+       }
     });
+
 
 });
 
@@ -128,7 +135,7 @@ function post(url, data, callback){
       type: 'POST',
       url: url,
       data: JSON.stringify(data),
-      dataType: "text",
+      dataType: "json",
       contentType: 'application/json',
       async:false,
       success: callback

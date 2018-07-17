@@ -1,6 +1,10 @@
 server:
   port: 8168
 
+dconcurrent:
+    hostList: **:50051,***,50052
+    serverport: 50051
+
 spring:
   application:
       name: hbase-scan-inc
@@ -12,7 +16,7 @@ spring:
   # 改成自己的数据库，仅需自己创建数据库即可，相关表会自动生成
   datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://
+      url: jdbc:mysql://**/hbase_inc_source?useUnicode=true&characterEncoding=utf-8
       username: test
       password: test
 
@@ -20,3 +24,4 @@ mybatis:
   mapper-locations: classpath*:mappers/*
   configuration:
       mapUnderscoreToCamelCase: true
+

@@ -1,6 +1,7 @@
 package com.lzz.component.source.hbase;
 
 import com.lzz.app.model.MetaInfo;
+import com.lzz.app.util.DateUtil;
 import com.lzz.component.channel.QueueCache;
 import com.lzz.component.source.UpdateDataTask;
 import org.apache.commons.lang.time.StopWatch;
@@ -37,18 +38,18 @@ public class HbaseScanManager implements UpdateDataTask {
         QueueCache queueCache = new QueueCache(this.metaInfo);
         BlockingQueue<String> queue = queueCache.queue();
 
-        logger.info( "itemPrice EndTime: " + getEndTime(String.valueOf(this.metaInfo.getId()))  );
+        logger.info( "EndTime: " + getEndTime(String.valueOf(this.metaInfo.getId()))  );
         Set<String> rowKeySet = new HashSet<>(100000); //要重新初始化
         Connection connection = null;
         boolean success=true;
         try {
-            long now = System.currentTimeMillis() - 15*60*1000; //往前推一分钟，避免hbase 所在服务器的时间跟本机时间一致
+            long now = DateUtil.current() - 15*60*1000; //往前推一分钟，避免hbase 所在服务器的时间跟本机时间一致
             long lastEndTime = getEndTime(String.valueOf(this.metaInfo.getId())).get();
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             connection = getHbaseConnection(metaInfo);
             logger.info("start get region");
-            List<Pair<byte[],byte[]>> pairList = getPairList(connection, "ecitem:IM_ItemPrice");
+            List<Pair<byte[],byte[]>> pairList = getPairList(connection, metaInfo.getTableName());
             logger.info("region size : " + pairList.size() + " and use time:" + stopWatch.getTime() );
 
             List<Future<ScanResult>> futureList = new ArrayList<>();
@@ -66,7 +67,6 @@ public class HbaseScanManager implements UpdateDataTask {
             }
             stopWatch.stop();
             logger.info("stop scan update row key and use time:" + stopWatch.getTime() + " and all rokeyset size" + rowKeySet.size());
-            rowKeySet.add("ffffhahaha aa");
             for(String rowkey : rowKeySet){
                 queue.put(rowkey);
             }
@@ -97,7 +97,7 @@ public class HbaseScanManager implements UpdateDataTask {
 
     private AtomicLong getEndTime(String id) {
         AtomicLong endTime = endTimeMap.get( id );
-        if( null == endTime ){
+        if( null == endTime || endTime.get() == 0 ){
             endTimeMap.put(id, new AtomicLong(0));
         }
         return endTimeMap.get(id);
@@ -105,7 +105,7 @@ public class HbaseScanManager implements UpdateDataTask {
 
     public static Connection getHbaseConnection(MetaInfo metaInfo) throws IOException {
         Configuration configuration = new Configuration();
-        configuration.set("hbase.zookeeper.quorum",  "10.16.46.193:2181" );
+        configuration.set("hbase.zookeeper.quorum",  metaInfo.getZkAddress() );
         configuration.set("hbase.client.retries.number", "3");
         Connection connection = ConnectionFactory.createConnection(configuration);
         return connection;

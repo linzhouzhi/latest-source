@@ -2,6 +2,7 @@ package com.lzz.component.channel;
 
 import com.lzz.app.logic.MetaLogic;
 import com.lzz.app.model.MetaInfo;
+import com.lzz.component.sink.KafkaManager;
 import com.lzz.component.sink.KafkaProducer;
 import org.springframework.stereotype.Component;
 import java.util.Map;
@@ -39,21 +40,21 @@ public class QueueCache {
         public void run() {
             BlockingQueue<String> blockingQueue = queue();
             String brokerStr = MetaLogic.getKafkaBrokerList( metaInfo.getKafkaAddress() );
-            KafkaProducer kafkaProducer = new KafkaProducer(brokerStr, metaInfo.getKfakaTopic());
+            KafkaManager kafkaManager = new KafkaManager(brokerStr, metaInfo.getKfakaTopic(), 10);
             try {
                 while (true){
                     String msg = blockingQueue.poll(10, TimeUnit.MINUTES);
                     if( null == msg ){
                         throw  new RuntimeException("msg blockding is long time empty");
                     }
-                    kafkaProducer.append( msg );
+                    kafkaManager.producer(msg );
                 }
             }catch (Exception e){
                 System.out.println( "remove queue....." );
             }finally {
                 // 如果走出了这一行，说明队列在约定时间内为空
                 queueMap.remove( String.valueOf(this.metaInfo.getId()) );
-                kafkaProducer.close();
+                kafkaManager.closeAll();
             }
         }
     }

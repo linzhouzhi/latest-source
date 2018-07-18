@@ -18,6 +18,13 @@ public class MetaController {
     @Resource
     private MetaLogic metaLogic;
 
+    @RequestMapping(value = "/getTaskNodes", method = RequestMethod.GET)
+    @ResponseBody
+    public Response getTaskNodes(){
+        String taskNodes = metaLogic.getTaskNodes();
+        return Response.Result(Response.DEFAULT, taskNodes);
+    }
+
     @RequestMapping(value = "/getMetaInfoList", method = RequestMethod.GET)
     @ResponseBody
     public Response getMetaInfoList(){

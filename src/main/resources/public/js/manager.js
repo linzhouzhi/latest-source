@@ -18,6 +18,10 @@ var alertTemplate = '<div class="alert alert-danger" role="alert">' +
                     '</div>';
 
 $(document).ready(function(){
+    $.get("/meta/getTaskNodes", function(obj){
+        var taskNodes = obj.res;
+        $("#service-node").text( taskNodes );
+    });
     $.get("/meta/getMetaInfoList", function(obj){
         var metaList = obj.res;
         var div_con = "";
@@ -31,6 +35,7 @@ $(document).ready(function(){
 
 $(document).on("click",".inc-item-content", function(){
     var detail = $(this).data("detail");
+    detail.updateTime = formatDate( detail.updateTime );
     $("#inc-item-detail").html( syntaxHighlight(detail) );
     $('#detail-inc-item-model').modal('show');
 });
@@ -129,6 +134,23 @@ function addError(msg){
     $("#add-inc-item-alert").html( alertTemplate.format( {"msg": msg } ) );
 }
 
+
+function formatDate(time){
+    var date = new Date(time);
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate(),
+        hour = date.getHours(),
+        min = date.getMinutes(),
+        sec = date.getSeconds();
+    var newTime = year + '-' +
+                month + '-' +
+                day + ' ' +
+                hour + ':' +
+                min + ':' +
+                sec;
+    return newTime;
+}
 
 function post(url, data, callback){
     $.ajax({

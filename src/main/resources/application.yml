@@ -1,9 +1,9 @@
 server:
-  port: 8168
+  port: 8169
 
 dconcurrent:
-    hostList: **:50051,***,50052
-    serverport: 50051
+    hostList:
+    serverport: 50052
 
 spring:
   application:
@@ -13,10 +13,9 @@ spring:
         enabled: true
         force: true
         charset: UTF-8
-  # 改成自己的数据库，仅需自己创建数据库即可，相关表会自动生成
   datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://**/hbase_inc_source?useUnicode=true&characterEncoding=utf-8
+      url: jdbc:mysql://:3306/hbase_inc_source?useUnicode=true&characterEncoding=utf-8
       username: test
       password: test
 

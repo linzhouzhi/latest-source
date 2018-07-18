@@ -47,7 +47,7 @@ public class ScanSchedule implements ApplicationListener<ContextRefreshedEvent> 
     @Scheduled(initialDelay=1000, fixedRate = 1000 * 10)
     public void scheduleScanDataSource(){
         try {
-            if( !client.isLeader() ){
+            if( null == client || !client.isLeader() ){
                 return;
             }
             List<MetaInfo> metaInfos = metaInfoDao.getMetaInfoStartSwitchList();
@@ -55,8 +55,8 @@ public class ScanSchedule implements ApplicationListener<ContextRefreshedEvent> 
                 long updateTime = metaInfo.getUpdateTime();
                 int updateRange = metaInfo.getUpdateRangeTime();
                 long current = DateUtil.current();
-                if( current - updateTime > updateRange * 60 * 1000 ){
-                    DFuture<Boolean> future = client.submit(new UpdateHbaseTask(metaInfo));
+                if( current - updateTime > updateRange ){
+                    DFuture<Boolean> future = client.submit(new UpdateHbaseTask(metaInfo), String.valueOf(metaInfo.getId()));
                     Boolean finishUpdate = future.get();
                     if( finishUpdate ){ // 成功要修改一下 update 时间保证，下次不会被继续调用
                         metaInfoDao.changeUpdateTime(metaInfo.getId(), DateUtil.current());

@@ -38,11 +38,7 @@ public class ScanRowKeyTask implements Callable<ScanResult> {
     public ScanResult call() throws Exception {
         Boolean success= false;
         try {
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
             rowKeySet = getRowKeySet(table, pair, lastEndTime,thisStartTime);
-            stopWatch.stop();
-            logger.info("get rowkey by pair use time:" + stopWatch.getTime());
             success=true;
         }catch (Exception e){
             logger.error( e );

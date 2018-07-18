@@ -7,6 +7,7 @@ import com.lzz.app.model.MetaInfo;
 import com.lzz.app.util.NetUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -20,8 +21,15 @@ public class MetaLogic {
     public static final String TOPIC_PATH =  "/brokers/topics";
     public static final String BROKERS_PATH =  "/brokers/ids";
 
+    @Value("${dconcurrent.hostList}")
+    private String hostListStr;
+
     @Autowired
     private IMetaInfoDao metaInfoDao;
+
+    public String getTaskNodes(){
+        return hostListStr;
+    }
 
     public List<MetaInfo> getMetaInfoList() {
         return  metaInfoDao.getMetaInfoList();

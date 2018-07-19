@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Component
 public class HbaseScanManager implements UpdateDataTask {
+    public static long MAX_UPDATE_RANGE_TIME = 10*60*1000;
     public static final Log logger = LogFactory.getLog(HbaseScanManager.class);
     public static ExecutorService threadPool = Executors.newFixedThreadPool(500);
     private static Map<String, AtomicLong> endTimeMap = new ConcurrentHashMap<>();
@@ -53,9 +54,22 @@ public class HbaseScanManager implements UpdateDataTask {
             List<Pair<byte[],byte[]>> pairList = HbaseManager.getPairList(connection, metaInfo.getTableName());
             logger.info("region size : " + pairList.size() + " and use time:" + stopWatch.getTime() );
 
+            long  startTime = lastEndTime;
+            long  endTime = now;
+            if( startTime == 0) { // 如果第一次运行，那么就是运行周期范围内的几分钟
+                startTime = now - MAX_UPDATE_RANGE_TIME;
+            }else if( (endTime - startTime) > 120*60*1000 ){ // 持续超过两个小时,那么就使用最近十分钟的
+                logger.error("endTime and startTime is too long range:" + (endTime - startTime));
+                startTime = now - MAX_UPDATE_RANGE_TIME;
+            }else if( (endTime - startTime) > MAX_UPDATE_RANGE_TIME ){ //如果当前时间距离上一次scan完成的时间，超过最大范围时间10分钟，那么这个任务的结束时间是上个任务往前推十分钟
+                logger.error("last end time > " + MAX_UPDATE_RANGE_TIME);
+                endTime = lastEndTime + MAX_UPDATE_RANGE_TIME;
+            }
+            logger.info("start scan startTime:" + startTime + "  endTime:" + endTime);
+
             List<Future<ScanResult>> futureList = new ArrayList<>();
             for(Pair<byte[], byte[]> pair: pairList){
-                Future<ScanResult> futureResSet = threadPool.submit( new ScanRowKeyTask(connection, pair, this.metaInfo, lastEndTime, now) );
+                Future<ScanResult> futureResSet = threadPool.submit( new ScanRowKeyTask(connection, pair, this.metaInfo, startTime, endTime) );
                 futureList.add( futureResSet );
             }
             logger.info("add all task key to rowKeySet");

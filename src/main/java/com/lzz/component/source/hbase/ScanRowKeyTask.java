@@ -24,21 +24,21 @@ public class ScanRowKeyTask implements Callable<ScanResult> {
     private MetaInfo metaInfo;
     private Table table;
     private Pair<byte[], byte[]> pair;
-    private long lastEndTime = 0;
-    private long thisStartTime = 0;
-    public ScanRowKeyTask(Connection connection, Pair<byte[], byte[]> pair, MetaInfo metaInfo, long lastEndTime, long thisStartTime) throws IOException {
+    private long startTime = 0;
+    private long endTime = 0;
+    public ScanRowKeyTask(Connection connection, Pair<byte[], byte[]> pair, MetaInfo metaInfo, long startTime, long endTime) throws IOException {
         this.metaInfo = metaInfo;
         this.table = connection.getTable(TableName.valueOf( metaInfo.getTableName() ));
         this.pair = pair;
-        this.lastEndTime = lastEndTime;
-        this.thisStartTime = thisStartTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     @Override
     public ScanResult call() throws Exception {
         Boolean success= false;
         try {
-            rowKeySet = getRowKeySet(table, pair, lastEndTime,thisStartTime);
+            rowKeySet = getRowKeySet(table, pair, startTime,endTime);
             success=true;
         }catch (Exception e){
             logger.error( e );
